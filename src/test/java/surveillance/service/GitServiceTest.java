@@ -32,7 +32,7 @@ public class GitServiceTest extends AcceptanceTest {
         String date = "2019-01-03";
         ResponseEntity<Map<String, Object>> responseEntity = new RestTemplate().exchange(
                 String.format("%s?q=committer-date:%s..%s+author:%s&token:%s"
-                        , url, date, date, "gbeea1004", "6316c0629d901e913cd3639129b89487f73ccad2"),
+                        , url, date, date, "gbeea1004", ""),
                 HttpMethod.GET,
                 new HttpEntity(httpHeaders),
                 new ParameterizedTypeReference<Map<String, Object>>(){}
