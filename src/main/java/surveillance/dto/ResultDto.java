@@ -1,15 +1,15 @@
 package surveillance.dto;
 
-public class TransferDto<T> {
+public class ResultDto<T> {
 
     private T body;
     private boolean success;
 
-    public TransferDto() {
+    public ResultDto() {
 
     }
 
-    public TransferDto(T body, boolean success) {
+    public ResultDto(T body, boolean success) {
         this.body = body;
         this.success = success;
     }

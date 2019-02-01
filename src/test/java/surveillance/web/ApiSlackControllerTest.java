@@ -7,16 +7,14 @@ import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import support.AcceptanceTest;
-import surveillance.domain.Member;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class SlackControllerTest extends AcceptanceTest {
+public class ApiSlackControllerTest extends AcceptanceTest {
 
-    private static final Logger logger = getLogger(SlackControllerTest.class);
+    private static final Logger logger = getLogger(ApiSlackControllerTest.class);
 
     private static final String CHANNEL = "CEUMURDL4";
 
@@ -30,7 +28,6 @@ public class SlackControllerTest extends AcceptanceTest {
         httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         params = new LinkedMultiValueMap<>();
-        //params.add("token", TOKEN);
     }
 
     @Test
@@ -43,10 +40,9 @@ public class SlackControllerTest extends AcceptanceTest {
     }
 
     @Test
-    public void obtainMemberTest() {
-        ResponseEntity<List> responseEntity = template().getForEntity("/api/slack", List.class, httpHeaders);
+    public void registerMemberTest() {
+        ResponseEntity<Void> responseEntity = template().postForEntity("/api/slack", null, Void.class, httpHeaders);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        logger.info("Members Body : " + responseEntity.getBody().toString());
     }
 
     @Test
@@ -61,14 +57,14 @@ public class SlackControllerTest extends AcceptanceTest {
         logger.info("Body : {} ",responseEntity.getBody());*/
     }
 
-    @Test
+    /*@Test
     public void sendMessageTest() {
         List<Member> members = new ArrayList<>();
         members.add(new Member("UCR3RN38X","Doby(lkhlkh23)", "lkhlkh09@gmial.com", ""));
 
         ResponseEntity<Void> responseEntity = template().postForEntity("/api/slack/UCR3RN38X", new HttpEntity<>(members, new HttpHeaders()), Void.class);
         softly.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+    }*/
 
     @Test
     public void sendMessageTest_실패() {

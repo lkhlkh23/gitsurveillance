@@ -12,14 +12,17 @@ import java.util.List;
 @PropertySource("classpath:configuration.properties")
 public class SlackApplicationConfigurationProp {
 
-    private String token;
     private String channel;
 
     private Cmd cmd = new Cmd();
 
+    private List<String> messages = new ArrayList<>();
+
     public static class Cmd {
 
         private String profile;
+        private String member;
+        private String message;
 
         public Cmd() {
 
@@ -32,14 +35,22 @@ public class SlackApplicationConfigurationProp {
         public void setProfile(String profile) {
             this.profile = profile;
         }
-    }
 
-    public String getToken() {
-        return token;
-    }
+        public String getMember() {
+            return member;
+        }
 
-    public void setToken(String token) {
-        this.token = token;
+        public void setMember(String member) {
+            this.member = member;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 
     public String getChannel() {
@@ -56,5 +67,13 @@ public class SlackApplicationConfigurationProp {
 
     public void setCmd(Cmd get) {
         this.cmd = cmd;
+    }
+
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
     }
 }

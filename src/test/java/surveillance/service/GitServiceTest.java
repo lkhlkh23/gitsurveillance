@@ -8,12 +8,11 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import support.AcceptanceTest;
 import support.MediaTypeCreator;
+import support.UserFixture;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 
-import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GitServiceTest extends AcceptanceTest {
@@ -39,6 +38,11 @@ public class GitServiceTest extends AcceptanceTest {
         );
 
         logger.info("Body : {}", responseEntity.getBody().toString());
+    }
+
+    @Test
+    public void isCommitTest() {
+        softly.assertThat(gitService.isCommit(UserFixture.DOBY, "2019-01-25")).isTrue();
     }
 
 }

@@ -10,12 +10,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import support.Converter;
-import support.RandomNumber;
+import support.HttpUtil;
 import surveillance.SlackApplicationConfigurationProp;
-import surveillance.domain.Member;
 import surveillance.domain.Message;
-
-import java.util.ArrayList;
+import surveillance.domain.Token;
+import surveillance.domain.user.User;
+import surveillance.domain.user.UserRepository;
 import java.util.List;
 import java.util.Map;
 
@@ -28,16 +28,79 @@ public class SlackService {
 
     private static final Logger logger = getLogger(SlackService.class);
 
-    @Value("${slack.token}")
-    private String slackToken;
-
-    @Value("${slack.channel}")
-    private String slackChannel;
-
     @Autowired
     private SlackApplicationConfigurationProp slackApplicationConfigurationProp;
 
-    public Map<String, Object> obtainMemberId() {
+    @Autowired
+    private Token token;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public void registerNewMember() {
+        List<String> slackIds = obtainMemberFromSlack();
+        for (String slackId : slackIds) {
+            if(isNewMember(slackId)) {
+                User user = new User(obtainMemberProfile(slackId), slackId);
+                logger.info("등록된 신규 회원 : {}", user.toString());
+                userRepository.save(user);
+            }
+        }
+    }
+
+    public boolean isNewMember(String slackId) {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if(user.isSelf(slackId)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<String> obtainMemberFromSlack() {
+        String url = slackApplicationConfigurationProp.getCmd().getMember();
+        String slackToken = token.getTokenOfSlack();
+        String slackChannel = slackApplicationConfigurationProp.getChannel();
+        logger.info("URL : {}, TOKEN : {}, CHANNEL : {}", url, slackToken, slackChannel);
+        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
+                String.format("%s?token=%s&channel=%s", url, slackToken, slackChannel),
+                HttpMethod.GET,
+                HttpUtil.createResource(),
+                new ParameterizedTypeReference<Map<String, Object>>(){}
+        );
+
+        return (List)responseEntity.getBody().get("members");
+    }
+
+    public String obtainMemberProfile(String slackId) {
+        String url = slackApplicationConfigurationProp.getCmd().getProfile();
+        ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
+                String.format("%s?token=%s&user=%s", url, token.getTokenOfSlack(), slackId),
+                HttpMethod.GET,
+                HttpUtil.createResource(),
+                new ParameterizedTypeReference<Map<String, Object>>(){}
+        );
+        Map<String, String> profile = Converter.objectToMap(responseEntity.getBody(), "profile");
+        return Converter.splitDisplayName(profile.get("display_name"));
+    }
+
+    public void sendMessage(User user) {
+        String url = slackApplicationConfigurationProp.getCmd().getMessage();
+        HttpEntity<Map<String, String>> request = new HttpEntity(new Message().createMessage(user, token, slackApplicationConfigurationProp)
+                , HttpUtil.createHttpHeader(MediaType.APPLICATION_FORM_URLENCODED));
+
+        restTemplate.postForEntity(url, request, Map.class);
+    }
+
+    public void sendAllMessage() {
+        List<User> users = userRepository.findByCommitted(false);
+        for (User user : users) {
+            sendMessage(user);
+        }
+    }
+
+    /*public Map<String, Object> obtainMemberId() {
         String url = "https://slack.com/api/conversations.members";
         ResponseEntity<Map<String, Object>> responseEntity = restTemplate.exchange(
                 String.format("%s?token=%s&channel=%s", url, slackToken, slackChannel),
@@ -94,10 +157,10 @@ public class SlackService {
             return false;
         }
         return true;
-    }
+    }*/
 
     /* 슬랙에 가입된 아이디인지 확인하는 메소드 */
-    public boolean isRegisteredSlackId(String slackId) {
+    /*public boolean isRegisteredSlackId(String slackId) {
         String url = slackApplicationConfigurationProp.getCmd().getProfile();
 
         logger.debug("slackId : {}, token : {}, url : {}", slackId, slackApplicationConfigurationProp.getToken(), url);
@@ -118,5 +181,5 @@ public class SlackService {
         }
 
         return false;
-    }
+    }*/
 }

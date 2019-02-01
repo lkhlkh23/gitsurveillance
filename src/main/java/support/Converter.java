@@ -18,4 +18,11 @@ public class Converter {
         return simpleDateFormat.format(currentDate);
     }
 
+    public static String splitDisplayName(String name) {
+        if(name.contains("(") && name.contains(")")) {
+            return name.split("\\(")[1].split("\\)")[0];
+        }
+        return name;
+    }
+
 }

@@ -4,9 +4,10 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import surveillance.domain.Member;
+import surveillance.domain.user.User;
 import surveillance.service.GitService;
 
 import java.util.*;
@@ -22,8 +23,8 @@ public class ApiGitController {
 
     private static final Logger logger = getLogger(ApiGitController.class);
 
-    @GetMapping
-    public ResponseEntity<List<Member>> obtainNonCommiter(List<Member> members) throws Exception {
-        return new ResponseEntity<>(gitService.obtainCommitOfMembers(members), HttpStatus.OK);
+    @PostMapping
+    public void applyCommit() {
+        gitService.applyCommitResult();
     }
 }

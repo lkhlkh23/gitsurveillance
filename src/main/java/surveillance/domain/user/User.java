@@ -1,92 +1,39 @@
 package surveillance.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import support.domain.AbstractEntity;
-import surveillance.domain.user.Avatar;
-import surveillance.dto.UserDto;
-
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Entity
-public class User extends AbstractEntity {
-
-    @Column(unique = true, length = 10, nullable = false)
-    @Size(min = 3, max = 10)
-    @NotBlank
-    private String userId;
-
-    @Column(length = 12, nullable = false)
-    @Size(min = 6, max = 12)
-    @NotBlank
-/*
-    @Pattern(regexp = "/^[A-Za-z0-9]{6,12}$/")
-*/
-    @JsonIgnore
-    private String password;
-
-    @Column(nullable = false)
-    @NotBlank
-    private String name;
-
-    @Column(nullable = false)
-    @NotBlank
-    private String gitId;
+public class User {
 
     @Column
     @NotBlank
+    @Id
     private String slackId;
 
-    //@Embedded
-    private Avatar avatar;
+    private String gitId;
+
+    @Column
+    private boolean committed = false;
 
     public User() {
 
     }
 
-    public User(String userId, String password, String name, String gitId, String slackId, Avatar avatar) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
+    public User(String gitId, String slackId) {
         this.gitId = gitId;
         this.slackId = slackId;
-        this.avatar = avatar;
     }
 
-    public String getUserId() {
-        return userId;
+
+    public boolean isCommitted() {
+        return committed;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGitId() {
-        return gitId;
-    }
-
-    public void setGitId(String gitId) {
-        this.gitId = gitId;
+    public void setCommitted(boolean committed) {
+        this.committed = committed;
     }
 
     public String getSlackId() {
@@ -97,27 +44,28 @@ public class User extends AbstractEntity {
         this.slackId = slackId;
     }
 
-    public Avatar getAvatar() {
-        return avatar;
+    public String getGitId() {
+        return gitId;
     }
 
-    public void setAvatar(Avatar avatar) {
-        this.avatar = avatar;
+    public void setGitId(String gitId) {
+        this.gitId = gitId;
     }
 
-    public UserDto _toUserDto() {
-        return new UserDto(this.userId, this.name, this.gitId, this.slackId, this.avatar);
+    public void completeCommit() {
+        this.committed = true;
+    }
+
+    public boolean isSelf(String slackId) {
+        return this.slackId.equals(slackId);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "userId='" + userId + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
+                "slackId='" + slackId + '\'' +
                 ", gitId='" + gitId + '\'' +
-                ", slackId='" + slackId + '\'' +
-                ", avatar=" + avatar +
+                ", committed=" + committed +
                 '}';
     }
 }
