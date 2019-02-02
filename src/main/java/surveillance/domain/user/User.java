@@ -18,6 +18,12 @@ public class User {
     @Column
     private boolean committed = false;
 
+    @Column
+    private int totalCount;
+
+    @Column
+    private int rank = 1;
+
     public User() {
 
     }
@@ -58,6 +64,33 @@ public class User {
 
     public boolean isSelf(String slackId) {
         return this.slackId.equals(slackId);
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public void plusTotalCount() {
+        this.totalCount += 1;
+    }
+
+    public void applyRank(User user) {
+        this.rank = user.rank + 1;
+        if(this.totalCount == user.totalCount) {
+            this.rank = user.rank;
+        }
     }
 
     @Override

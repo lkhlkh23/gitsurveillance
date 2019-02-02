@@ -373,3 +373,12 @@ a {
   border-radius: 5px;
   background:rgb(255,171,64);
 }
+
+.numberCircle {
+    width: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 5px;
+    border: 1px solid #666;
+}

@@ -1,1 +1,1 @@
-INSERT INTO user (git_id, slack_id, committed) values ('lkhlkh23', 'DCPUFN4N7', 0);
+--INSERT INTO user (git_id, slack_id, committed, total_count) values ('lkhlkh23', 'DCPUFN4N7', 0, 0);

@@ -1,6 +1,7 @@
 package support;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 public class Converter {
@@ -23,6 +24,13 @@ public class Converter {
             return name.split("\\(")[1].split("\\)")[0];
         }
         return name;
+    }
+
+    public static String obtainYesterday() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DATE, -1);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return simpleDateFormat.format(calendar.getTime());
     }
 
 }

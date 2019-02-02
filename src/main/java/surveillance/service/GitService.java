@@ -50,6 +50,7 @@ public class GitService {
         for(User user : users) {
             if(isCommit(user, date)) {
                 user.completeCommit();
+                user.plusTotalCount();
             }
         }
     }
