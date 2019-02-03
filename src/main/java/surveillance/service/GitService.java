@@ -51,6 +51,7 @@ public class GitService {
             if(isCommit(user, date)) {
                 user.completeCommit();
                 user.plusTotalCount();
+                user.applyPerformance();
             }
         }
     }

@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/tinymce.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
 </head>
 <body>
@@ -35,35 +36,26 @@
 
         <div class="issues__posts mdl-grid">
             <div class="issues-card-wide mdl-card mdl-shadow--2dp">
-                <div class="mdl-card__title" style="height:80px;">
-                    <h2 class="mdl-card__title-text mdl-color-text--grey-800" align="center"> 2019.01.01 ~ {{ date }} </h2>
+                <div class="mdl-card__title">
+                    <h2 class="mdl-card__title-text mdl-color-text--grey-800" align="center"> Performance in stage </h2>
                 </div>
-                <div class="mdl-card__supporting-text">
-                    <ul class="issue-list mdl-list">
-						{{# users }}
-                        <li class="mdl-list__item mdl-list__item--three-line">
-							<span class="mdl-list__item-primary-content">
-                                <span class="w3-badge w3-xlarge w3-red"> {{ rank }}  </span> Commit Performance {{ totalCount }}
-
-								<span class="mdl-list__item-sub-title">
-									<h5>  {{ gitId }}  </h5>
-								</span>
-							</span>
-                        </li>
-						{{/ users }}
-                    </ul>
-                </div>
+                <table width="100%">
+                    {{# users }}
+                    <tr height="60px">
+                        <td width="10%" align="center" vertical-align="center"> <h3> <span class="label label-danger"> <b> {{ rank }} </b> </span> </h3> </td>
+                        <td width="90%" align="left" vertical-align="center">
+                            <h3>
+                                {{# members }}
+                                <span class="label label-success" style="margin:1%;"> {{ gitId }} ({{ performance }}%)  </span>
+                                {{/ members }}
+                            </h3>
+                        </td>
+                    </tr>
+                    {{/ users }}
+                </table>
             </div>
         </div>
 
-
-        <footer class="mdl-mini-footer">
-            <div class="mdl-mini-footer--left-section">
-                <div class="mdl-logo mdl-color-text--grey-600">
-                    Proudly powered by <a href="https://github.com/Byeol">Byeol</a>
-                </div>
-            </div>
-        </footer>
     </main>
     <div class="mdl-layout__obfuscator"></div>
 </div>

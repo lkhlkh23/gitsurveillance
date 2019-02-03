@@ -25,12 +25,4 @@ public class Converter {
         }
         return name;
     }
-
-    public static String obtainYesterday() {
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(Calendar.DATE, -1);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return simpleDateFormat.format(calendar.getTime());
-    }
-
 }

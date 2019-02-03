@@ -16,6 +16,8 @@ import surveillance.domain.Message;
 import surveillance.domain.Token;
 import surveillance.domain.user.User;
 import surveillance.domain.user.UserRepository;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +43,7 @@ public class SlackService {
         List<String> slackIds = obtainMemberFromSlack();
         for (String slackId : slackIds) {
             if(isNewMember(slackId)) {
-                User user = new User(obtainMemberProfile(slackId), slackId);
+                User user = new User(obtainMemberProfile(slackId), slackId, LocalDate.now());
                 logger.info("등록된 신규 회원 : {}", user.toString());
                 userRepository.save(user);
             }

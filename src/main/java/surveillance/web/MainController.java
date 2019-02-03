@@ -6,12 +6,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import support.Converter;
+import surveillance.domain.user.User;
+import surveillance.domain.user.Users;
 import surveillance.service.GitService;
 import surveillance.service.SlackService;
 import surveillance.service.UserService;
 
-import javax.persistence.Convert;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -33,13 +36,17 @@ public class MainController {
     public String start(Model model) throws Exception {
         logger.debug(" ========= start =========");
 
+        /* 신규멤버 등록 */
         slackService.registerNewMember();
 
+        /* 멤버들 랭킹 정보 조회 */
         model.addAttribute("users", userService.obtainUsersWithRank());
-        model.addAttribute("date", Converter.obtainYesterday());
+        model.addAttribute("date", Converter.obtainCurrentDate());
 
+        /* Commit Result 조회 */
         //gitService.applyCommitResult();
 
+        /* 메세지 전송 */
         //slackService.sendAllMessage();
 
         return "index";

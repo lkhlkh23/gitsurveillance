@@ -1,9 +1,16 @@
 package surveillance.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import static java.util.concurrent.TimeUnit.DAYS;
 
 @Entity
 public class User {
@@ -19,10 +26,16 @@ public class User {
     private boolean committed = false;
 
     @Column
+    private int performance;
+
+    @Column
     private int totalCount;
 
     @Column
     private int rank = 1;
+
+    @Column
+    private LocalDate createDate;
 
     public User() {
 
@@ -31,6 +44,11 @@ public class User {
     public User(String gitId, String slackId) {
         this.gitId = gitId;
         this.slackId = slackId;
+    }
+
+    public User(String gitId, String slackId, LocalDate createDate) {
+        this(gitId, slackId);
+        this.createDate = createDate;
     }
 
 
@@ -82,13 +100,46 @@ public class User {
         this.rank = rank;
     }
 
+    public int getPerformance() {
+        return performance;
+    }
+
+    public void setPerformance(int performance) {
+        this.performance = performance;
+    }
+
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
+
+    @JsonIgnore
+    public String getFormattedCreateDate() {
+        return getFormattedDate(createDate, "yyyy.MM.dd");
+    }
+
+    private String getFormattedDate(LocalDate date, String format) {
+        if (date == null) {
+            return "";
+        }
+        return date.format(DateTimeFormatter.ofPattern(format));
+    }
+
     public void plusTotalCount() {
         this.totalCount += 1;
     }
 
+    public void applyPerformance() {
+        int days = Period.between(createDate, LocalDate.now()).getDays();
+        this.performance = (int) Math.round((double)totalCount / days);
+    }
+
     public void applyRank(User user) {
         this.rank = user.rank + 1;
-        if(this.totalCount == user.totalCount) {
+        if(this.performance == user.performance) {
             this.rank = user.rank;
         }
     }
